@@ -76,7 +76,60 @@ body{
     width: 100%;
     align-items: center;
     justify-content: center;
+    border: 1px solid white
 }
+
+.future-forecast .today{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid white;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.future-forecast .today .day{
+    padding: 5px 15px;
+    background: darkgray;
+    border-radius: 50px;
+    text-align: center;
+}
+
+.future-forecast .today .temp{
+    font-size: 18px;
+    padding-top: 15px;
+}
+
 .future-forecast .weather-forecast{
     display:flex;
+}
+
+.weather-forecast .weather-forecast-item{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 10px;
+    border: 1px solid white;
+    border-radius: 10px;
+    padding: 20px;
+    
+}
+.weather-forecast .weather-forecast-item .day{
+    padding: 5px 15px;
+    background-color: darkgray;
+    border-radius: 50px;
+    text-align: center;
+}
+
+.weather-forecast .weather-forecast-item .temp{
+    font-weight: 150;
+}
+
+@media screen and (max-width: 795px) {
+    .future-forecast {
+        justify-content: start;
+        align-items: none;
+       overflow-y: scroll;
+    }
 }
