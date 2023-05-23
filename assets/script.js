@@ -1,37 +1,79 @@
 let timeEl = document.getElementById('time');
 let dateEl =document.getElementById('date');
-let currentWeatherItemEl = document.getElementById('current-weather-item');
-let timezone = document.getElementById('time-zone');
-let countryEl = document.getElementById('country');
+let currentWeatherItemEl = document.getElementById('current-weather-items');
+//let timezone = document.getElementById('time-zone');
+//let countryEl = document.getElementById('country');
 let weatherForecastEl = document.getElementById('weather-forecast');
 let currentTempEl = document.getElementById('current-temp');
 let APIKey = 'c84e398e53ea574153ad1bdd9558e008';
 
-let days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+let days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
 let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 setInterval(() => {
     let time = new Date();
     let months = time.getMonth();
     let date = time.getDate();
-    let day = time.getHours();
+    let day = time.getDay();
+    let hour= time.getHours();
     let hoursIn12HrFormat = hour >= 13 ? hour %12: hour
     let minutes = time.getMinutes();
-    let ampm = hours >=12 ? 'PM' : 'AM'
+    let ampm = hour >=12 ? 'PM' : 'AM'
 
     timeEl.innerHTML = hoursIn12HrFormat + ':' + minutes + ' ' + `<span id="am-pm">${ampm}</span>`
 
-    dateEl.innerHTML =  days[day] + ':' + date + ' ' + months[months]
+    dateEl.innerHTML =  days[day] + ',' + date + ' ' + months[months]
 }, 1000);
 
 function getWeatherData () {
     navigator.geolocation.getCurrentPosition((success) => {
-        
+        console.log(hello);
     let {latitude, longitude} = success.coords;
 
-    fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&exclude=hourly,minutely&appid=${APIKey}`)
+    fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&exclude=hourly,minutely&units=imperial&appid=${APIKey}`)
     .then(res => res.json()).then(data =>{
 
-        })
+        console.log(data)
+        showWeatherData(data);
+         })
     })
+}
+
+function showWeatherData (data){
+    let {humidity, pressure, wind_speed} = data.current; 
+
+    currentWeatherItemEl.innerHTML =   
+   `    <div class="weather-items">
+   <div>Humidity</div>
+   <div>${humidity}%</div>
+  </div>
+  <div class="weather-items">
+   <div>Pressure</div>
+   <div>${pressure}</div>
+  </div>
+  <div class="weather-items">
+   <div>Wind Speed</div>
+   <div>${wind_speed}</div>
+  </div>`;
+
+  let otherDayForecast = ''
+data.daily.forEach((day, idx) => {
+    if(idx == 0){
+        currentTempEl.innerHTML`  <img src="https://openweathermap.org/img/wn/${day.weather[0].icon}@5x.png" alt="weather icon" class="w-icon">
+        <div class="other">
+        <div class="day">Monday</div>
+        <div class="temp">Day -${day.temp.night}&#&#176; F</div>
+        <div class="temp">Night -${day.temp.day}&#176; F</div>
+    </div>`
+    }else{
+        otherDayForecast += `<div class="weather-forecast-item">
+        <div class="day">Friday</div>${window.moment(day.dt*1000).format('ddd')}
+        <img src="https://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png" alt="weather icon" class="w-icon">
+        <div class="temp">Day - ${day.temp.night}&#176; F</div>
+        <div class="temp">Night - ${day.temp.day}&#176; F</div>   
+    </div>`
+    }
+})
+
+weatherForecastEl.innerHTML = otherDayForecast;
 }
