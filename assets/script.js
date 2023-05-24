@@ -1,11 +1,15 @@
 let timeEl = document.getElementById('time');
 let dateEl =document.getElementById('date');
+let userInputCity = document.getElementById('city-name');
 let currentWeatherItemEl = document.getElementById('current-weather-items');
-//let timezone = document.getElementById('time-zone');
-//let countryEl = document.getElementById('country');
+let userSearchEl = document.getElementById('user-search-input');
+let cityTemp = document.getElementById('temp');
+let cityWind = document.getElementById('wind-speed');
+let cityHumidity = document.getElementById('humidity');
 let weatherForecastEl = document.getElementById('weather-forecast');
 let currentTempEl = document.getElementById('current-temp');
 let APIKey = 'c84e398e53ea574153ad1bdd9558e008';
+let userSearchElValue = document.getElementById('user-search-input').value;
 
 let days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
 let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -25,19 +29,18 @@ setInterval(() => {
     dateEl.innerHTML =  days[day] + ',' + date + ' ' + months[months]
 }, 1000);
 
-function getWeatherData () {
-    navigator.geolocation.getCurrentPosition((success) => {
-        console.log(hello);
-    let {latitude, longitude} = success.coords;
+searchButtonEl.addEventListener('click', function() {
 
-    fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&exclude=hourly,minutely&units=imperial&appid=${APIKey}`)
+    let userSearchElValue = document.getElementById('user-search-input').value;
+
+    userInputCity.textContent = userSearchElValue + '   ' + moment().format("dddd, MMMM Do") 
+    
+    fetch(`api.openweathermap.org/data/2.5/forecast?q=${userSearchElValue}units=imperial&appid=${APIKey}`)
     .then(res => res.json()).then(data =>{
-
-        console.log(data)
         showWeatherData(data);
          })
-    })
-}
+        })
+
 
 function showWeatherData (data){
     let {humidity, pressure, wind_speed} = data.current; 
